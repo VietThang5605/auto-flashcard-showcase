@@ -1,0 +1,49 @@
+# Auto Flashcard — .gitignore
+
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+
+# Production
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local environment variables — KHÔNG BAO GIỜ commit file này!
+# Chứa API keys và sensitive data
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+*.env
+env-*
+env.local
+env.copy
+env-copy
+env-local
+!.env.example
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts

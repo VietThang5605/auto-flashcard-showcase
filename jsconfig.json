@@ -1,0 +1,11 @@
+// --- jsconfig.json ---
+// Cấu hình TypeScript/JavaScript cho Next.js.
+// Định nghĩa path alias "@/" → "./src/" để import ngắn gọn.
+
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

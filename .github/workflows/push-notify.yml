@@ -1,0 +1,43 @@
+# .github/workflows/push-notify.yml
+# Thay thế Vercel Cron (chỉ chạy 1 lần/ngày trên Hobby plan).
+# GitHub Actions miễn phí và có thể chạy mỗi 15 phút.
+# Workflow này chỉ đơn giản là gọi API /api/cron/notify trên Vercel production.
+
+name: Push Notification Scheduler
+
+on:
+  schedule:
+    # Chạy mỗi 15 phút (0, 15, 30, 45 của mỗi giờ)
+    # GitHub Actions dùng UTC — logic timezone đã xử lý trong API.
+    - cron: "0,15,30,45 * * * *"
+
+  # Cho phép chạy thủ công từ tab Actions trên GitHub để test
+  workflow_dispatch:
+
+jobs:
+  trigger-notify:
+    name: Trigger Push Notifications
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Call Vercel Cron API
+        run: |
+          # Lưu cả status code lẫn body vào biến riêng để debug dễ hơn
+          BODY=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.VERCEL_APP_URL }}/api/cron/notify")
+
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.VERCEL_APP_URL }}/api/cron/notify")
+
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "Response Body: $BODY"
+
+          if [[ "$HTTP_STATUS" -lt 200 || "$HTTP_STATUS" -ge 300 ]]; then
+            echo "❌ API call failed with status $HTTP_STATUS"
+            exit 1
+          fi
+
+          echo "✅ Notification cron triggered successfully"

@@ -1,0 +1,332 @@
+/* globals.css
+   File CSS toàn cục cho ứng dụng Auto-Flashcard.
+   Định nghĩa design tokens, color palette, và custom animations.
+   Sử dụng TailwindCSS v4 + shadcn/ui CSS variable theming.
+*/
+
+@import "tailwindcss";
+
+/* 
+  Ép Tailwind v4 sử dụng chế độ "class-based" thay vì "media" (mặc định của hệ thống).
+  Điều này đảm bảo khi người dùng chọn "Sáng" trong Setting, các class dark: sẽ KHÔNG 
+  bị kích hoạt ngay cả khi máy tính đang ở Dark Mode.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Tailwind v4: @theme inline cho phép dùng var() — giá trị được resolve runtime.
+  có thể sinh ra các utility class như bg-card, bg-popover, v.v... và phản ứng
+  đúng với dark mode nhờ CSS cascade.
+*/
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+/* =============================================
+   LIGHT MODE (mặc định)
+   Màu sắc chủ đạo: Coral-red (năng lượng + hứng khởi)
+   ============================================= */
+:root {
+  --background: oklch(0.985 0.002 247.858);
+  --foreground: oklch(0.141 0.005 285.823);
+
+  --card: oklch(1.0 0.0 0.0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+
+  --popover: oklch(1.0 0.0 0.0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
+
+  --primary: oklch(0.637 0.237 25.331);
+  --primary-foreground: oklch(0.985 0.002 247.858);
+
+  --secondary: oklch(0.922 0.006 264.531);
+  --secondary-foreground: oklch(0.141 0.005 285.823);
+
+  --muted: oklch(0.952 0.005 264.531);
+  --muted-foreground: oklch(0.556 0.016 286.033);
+
+  --accent: oklch(0.952 0.005 264.531);
+  --accent-foreground: oklch(0.141 0.005 285.823);
+
+  --destructive: oklch(0.637 0.237 25.331);
+  --destructive-foreground: oklch(0.985 0.002 247.858);
+
+  --border: oklch(0.902 0.008 264.531);
+  --input: oklch(0.902 0.008 264.531);
+  --ring: oklch(0.637 0.237 25.331);
+
+  --radius: 0.625rem;
+
+  /* Brand colors */
+  --brand-coral: #e85d4a;
+  --brand-violet: #7c3aed;
+  --brand-emerald: #10b981;
+  --brand-amber: #f59e0b;
+}
+
+.dark {
+  --background: oklch(0.18 0.008 285.823);
+  --foreground: oklch(0.985 0.002 247.858);
+
+  --card: oklch(0.24 0.012 285.823);
+  --card-foreground: oklch(0.985 0.002 247.858);
+
+  --popover: oklch(0.24 0.012 285.823);
+  --popover-foreground: oklch(0.985 0.002 247.858);
+
+  --primary: oklch(0.68 0.22 25.331);
+  --primary-foreground: oklch(0.985 0.002 247.858);
+
+  --secondary: oklch(0.28 0.01 286.033);
+  --secondary-foreground: oklch(0.985 0.002 247.858);
+
+  --muted: oklch(0.28 0.01 286.033);
+  --muted-foreground: oklch(0.707 0.015 286.033);
+
+  --accent: oklch(0.28 0.01 286.033);
+  --accent-foreground: oklch(0.985 0.002 247.858);
+
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0.002 247.858);
+
+  --border: oklch(0.28 0.01 286.033);
+  --input: oklch(0.28 0.01 286.033);
+  --ring: oklch(0.68 0.22 25.331);
+}
+
+/* =============================================
+   BASE STYLES
+   ============================================= */
+div, section, article, nav, aside, header, footer {
+  border-color: var(--border);
+}
+
+* {
+  outline-color: color-mix(in oklch, var(--ring) 50%, transparent);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  /* Chuyển transition mượt khi toggle theme */
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* =============================================
+   CUSTOM ANIMATIONS
+   Dùng cho micro-interactions và gamification
+   ============================================= */
+
+/* Hiệu ứng lật card 3D cho Review session */
+@keyframes flip-in {
+  from {
+    transform: rotateY(-90deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+/* Hiệu ứng shimmer cho skeleton loading khi AI đang xử lý */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Hiệu ứng slide-up khi content xuất hiện (stagger animation) */
+@keyframes slide-up {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Hiệu ứng glow-pulse cho interactive elements */
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 40%, transparent);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent);
+  }
+}
+
+/* Hiệu ứng bounce nhẹ cho active tab icons */
+@keyframes icon-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.1);
+  }
+}
+
+/* Hiệu ứng shake cho quiz sai (visual feedback) */
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+/* Hiệu ứng âm thanh sóng cho text-to-speech */
+@keyframes sound-wave {
+
+  0%,
+  100% {
+    height: 4px;
+  }
+
+  50% {
+    height: 14px;
+  }
+}
+
+/* Utility classes cho animations */
+.animate-flip-in {
+  animation: flip-in 0.4s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s infinite;
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-out;
+}
+
+/* Shimmer gradient cho skeleton loading */
+.shimmer {
+  background: linear-gradient(90deg,
+      var(--muted) 0%,
+      color-mix(in oklch, var(--muted) 70%, var(--background)) 50%,
+      var(--muted) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* =============================================
+   3D FLIP CARD
+   Dùng trong Review session
+   ============================================= */
+.flip-card-container {
+  perspective: 1000px;
+}
+
+.flip-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* =============================================
+   SCROLLBAR STYLING
+   Scrollbar nhỏ gọn, match với theme
+   ============================================= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* =============================================
+   SELECTION COLOR
+   Màu highlight khi select text
+   ============================================= */
+::selection {
+  background: color-mix(in oklch, var(--primary) 25%, transparent);
+  color: var(--foreground);
+}
+
+/* =============================================
+   SAFE AREA INSETS cho PWA standalone mode
+   Quan trọng cho iPhone notch và Dynamic Island
+   ============================================= */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
