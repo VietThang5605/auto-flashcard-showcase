@@ -6,6 +6,8 @@ Demo: https://auto-flashcard.vercel.app/
 
 The project is built as a full-stack PWA with authentication, offline-first local storage, spaced repetition, push reminders, and Supabase synchronization.
 
+> **Repository Note:** This repository is a cleaned public showcase version of the original development project. The commit history was reset so the public version only includes the current source code, documentation, and example environment configuration.
+
 ## Features
 
 - AI flashcard generation with OpenAI or Google Gemini.
